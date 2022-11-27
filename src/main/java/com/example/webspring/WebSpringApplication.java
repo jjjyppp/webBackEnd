@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.example.webspring.mapper")
-public class WebSpringApplication {
-
+public class WebSpringApplication{
     public static void main(String[] args) {
         SpringApplication.run(WebSpringApplication.class, args);
     }
