@@ -34,6 +34,9 @@ public class IndexController {
         if(indexMapper.selectPassFromName(logName).equals(logPass)){
             return indexMapper.selectIdFromName(logName);
         };
+        if(indexMapper.isNameExisted(logName)){
+            return -2;
+        }
         return -1;
     }
 }
