@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-
 public class BlogController {
     @Autowired
     private BlogMapper blogMapper;
@@ -32,4 +31,23 @@ public class BlogController {
     public Blog getOneBlog(int blogID){
         return blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",blogID));
     }
+
+    @GetMapping("/deleteBlog")
+    public boolean deleteBlog(int blogID){
+        blogMapper.delete(new QueryWrapper<Blog>().eq("blogid",blogID));
+        for(int i=blogID+1;i<blogMapper.countBlog()+1;i++){
+            Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
+            new_blog.setBlogid(i-1);
+            blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
+        }
+        return true;
+    }
+
+    @GetMapping("/writeBlog")
+    public int writeBlog(Blog blog){
+        blog.setBlogid(blogMapper.countBlog());
+        blogMapper.insert(blog);
+        return blog.getBlogid();
+    }
+
 }
