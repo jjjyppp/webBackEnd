@@ -31,12 +31,12 @@ public class IndexController {
     @GetMapping("/login")
     @CrossOrigin
     public int login(String logName, String logPass){
+        if(!indexMapper.isNameExisted(logName)){
+            return -1;
+        }
         if(indexMapper.selectPassFromName(logName).equals(logPass)){
             return indexMapper.selectIdFromName(logName);
-        };
-        if(indexMapper.isNameExisted(logName)){
-            return -2;
         }
-        return -1;
+        return -2;
     }
 }
