@@ -21,4 +21,15 @@ public class BlogController {
     public List<Blog> getBlogs(int n){
         return blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n));
     }
+
+    @GetMapping("/myBlog")
+    public List<Blog> getMyBlog(int userID,int n){
+        List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userID));
+        return myBlogs.subList(0,n);
+    }
+
+    @GetMapping("/getOneBlog")
+    public Blog getOneBlog(int blogID){
+        return blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",blogID));
+    }
 }
