@@ -1,24 +1,33 @@
 package com.example.webspring.entity;
 
 public class Comment {
-    int comment_id;
-    int user_id;
+    int commentid;
+    int userid;
+    int blogid;
     String content;
 
-    public int getComment_id() {
-        return comment_id;
+    public int getCommentid() {
+        return commentid;
     }
 
-    public void setComment_id(int comment_id) {
-        this.comment_id = comment_id;
+    public void setCommentid(int commentid) {
+        this.commentid = commentid;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserid() {
+        return userid;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
+
+    public int getBlogid() {
+        return blogid;
+    }
+
+    public void setBlogid(int blogid) {
+        this.blogid = blogid;
     }
 
     public String getContent() {
@@ -32,8 +41,9 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" +
-                "comment_id=" + comment_id +
-                ", user_id=" + user_id +
+                "commentid=" + commentid +
+                ", userid=" + userid +
+                ", blogid=" + blogid +
                 ", content='" + content + '\'' +
                 '}';
     }
