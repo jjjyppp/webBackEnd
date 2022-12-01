@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin //允许跨域请求数据
 public class IndexController {
+    public static User user;
+
     @Autowired //注入
     private IndexMapper indexMapper;
     //注册
