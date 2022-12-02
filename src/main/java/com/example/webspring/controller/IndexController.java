@@ -19,14 +19,14 @@ public class IndexController {
     @ApiOperation("传进姓名、密码,若用户名已注册过返回existed,否则返回id+name")
     @GetMapping("/register")
     @CrossOrigin
-    public boolean register(User user){
+    public int register(User user){
         if(indexMapper.isNameExisted(user.getName())){
-            return false;
+            return -1;
         }
         int id=indexMapper.selectCount(null);
         user.setId(id);
         indexMapper.insert(user);
-        return true;
+        return id;
     }
 
     @ApiOperation("传进姓名、密码，若成功登录返回用户id,否则返回-1")
