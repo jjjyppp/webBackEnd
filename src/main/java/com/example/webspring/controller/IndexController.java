@@ -1,5 +1,6 @@
 package com.example.webspring.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.webspring.entity.User;
 import com.example.webspring.mapper.IndexMapper;
 import io.swagger.annotations.ApiOperation;
@@ -19,14 +20,14 @@ public class IndexController {
     @ApiOperation("传进姓名、密码,若用户名已注册过返回existed,否则返回id+name")
     @GetMapping("/register")
     @CrossOrigin
-    public boolean register(User user){
+    public int register(User user){
         if(indexMapper.isNameExisted(user.getName())){
-            return false;
+            return -1;
         }
         int id=indexMapper.selectCount(null);
         user.setId(id);
         indexMapper.insert(user);
-        return true;
+        return id;
     }
 
     @ApiOperation("传进姓名、密码，若成功登录返回用户id,否则返回-1")
@@ -40,5 +41,10 @@ public class IndexController {
             return indexMapper.selectIdFromName(logName);
         }
         return -2;
+    }
+
+    @GetMapping("/getUserName")
+    public String getUserName(int userid){
+        return indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid)).getName();
     }
 }
