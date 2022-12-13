@@ -19,13 +19,21 @@ import java.util.Random;
 public class DrifterController {
     @Autowired //注入
     private DrifterMapper drifterMapper;
+    private static int maxID=1000;
 
-    @ApiOperation("传入content，timeStamp，返回这个漂流瓶的ID")
+    @ApiOperation("传入ownerid,title,content，返回这个漂流瓶的ID")
     @GetMapping("/writeDrifter")
     @CrossOrigin
     public int writeDrifter(Drifter drifter){
-        int id=drifterMapper.selectCount(null);
+        Random random=new Random();
+        random.setSeed(10000L);
+
+        int id=random.nextInt(1000);
+        while(drifterMapper.isDrifterExisted(id)) {
+            id = random.nextInt(1000);
+        }
         drifter.setId(id);
+        if(id>maxID) maxID=id;
 
         Timestamp time=new Timestamp(System.currentTimeMillis());
         SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +43,6 @@ public class DrifterController {
 
         drifter.setPickerid(-1);
         drifter.setIspicked(false);
-
         drifterMapper.insert(drifter);
 
         return id;
@@ -55,12 +62,11 @@ public class DrifterController {
         int count=0;
         Random random=new Random();
         random.setSeed(10000L);
-        int maxID=drifterMapper.selectCount(null);
-        int id=random.nextInt(maxID);
+        int id=random.nextInt(maxID+1);
         Drifter drifter;
         while(!(drifterMapper.isDrifterExisted(id)&&!drifterMapper.isPicked(id))) {
-            if(count>=30) return null;
-            id = random.nextInt(maxID);
+            if(count>=1000) return null;
+            id = random.nextInt(maxID+1);
             count++;
         }
         drifter= drifterMapper.selectDrifter(id).get(0);
@@ -79,5 +85,4 @@ public class DrifterController {
         else drifterMapper.deleteDrifter(id);
         return true;
     }
-
 }

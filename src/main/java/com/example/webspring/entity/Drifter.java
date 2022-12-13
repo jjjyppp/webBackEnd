@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class Drifter {
     private int id;
+    private int ownerid;
     private Timestamp time;
     private String title;
     private String content;
@@ -19,6 +20,10 @@ public class Drifter {
     public int getId() {
         return id;
     }
+
+    public void setOwnerid(int ownerid){this.ownerid=ownerid;}
+
+    public int getOwnerid(){return ownerid;}
 
     public void setContent(String content) {
         this.content = content;
