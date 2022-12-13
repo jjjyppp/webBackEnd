@@ -1,5 +1,6 @@
 package com.example.webspring.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.webspring.entity.User;
 import com.example.webspring.mapper.IndexMapper;
 import io.swagger.annotations.ApiOperation;
@@ -40,5 +41,10 @@ public class IndexController {
             return indexMapper.selectIdFromName(logName);
         }
         return -2;
+    }
+
+    @GetMapping("/getUserName")
+    public String getUserName(int userid){
+        return indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid)).getName();
     }
 }
