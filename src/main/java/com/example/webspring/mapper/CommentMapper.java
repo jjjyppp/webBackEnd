@@ -7,6 +7,4 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface CommentMapper extends BaseMapper<Comment> {
-    @Select("select count(*) from comment")
-    public int countComment();
 }

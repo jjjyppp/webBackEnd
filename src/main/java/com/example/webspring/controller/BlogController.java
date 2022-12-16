@@ -46,7 +46,7 @@ public class BlogController {
     @GetMapping("/deleteBlog")
     public boolean deleteBlog(int blogid){
         blogMapper.delete(new QueryWrapper<Blog>().eq("blogid",blogid));
-        for(int i=blogid+1;i<blogMapper.countBlog()+1;i++){
+        for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
             Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
             new_blog.setBlogid(i-1);
             blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
@@ -56,14 +56,14 @@ public class BlogController {
 
     @GetMapping("/writeBlog")
     public int writeBlog(Blog blog){
-        blog.setBlogid(blogMapper.countBlog());
+        blog.setBlogid(blogMapper.selectCount(null));
         blogMapper.insert(blog);
         return blog.getBlogid();
     }
 
     @GetMapping("/writeComment")
     public boolean writeComment(Comment comment){
-        comment.setCommentid(commentMapper.countComment());
+        comment.setCommentid(commentMapper.selectCount(null));
         commentMapper.insert(comment);
         return true;
     }
