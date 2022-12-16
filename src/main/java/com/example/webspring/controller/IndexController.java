@@ -47,4 +47,13 @@ public class IndexController {
     public String getUserName(int userid){
         return indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid)).getName();
     }
+
+    @GetMapping("/changeInfo")
+    public boolean changeInfo(String name,String passwd,int userid){
+        User user=indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid));
+        user.setName(name);
+        user.setPassword(passwd);
+        indexMapper.update(user,new QueryWrapper<User>().eq("id",userid));
+        return true;
+    }
 }

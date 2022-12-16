@@ -1,18 +1,17 @@
 package com.example.webspring.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.webspring.entity.Blog;
-import com.example.webspring.entity.Comment;
-import com.example.webspring.entity.Love;
+import com.example.webspring.entity.*;
 import com.example.webspring.mapper.BlogMapper;
+import com.example.webspring.mapper.CollectMapper;
 import com.example.webspring.mapper.CommentMapper;
 import com.example.webspring.mapper.LoveMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,6 +23,9 @@ public class BlogController {
     private CommentMapper commentMapper;
     @Autowired
     private LoveMapper loveMapper;
+
+    @Autowired
+    private CollectMapper collectMapper;
 
     @GetMapping("/allBlog")
     public List<Blog> getBlogs(int n){
@@ -90,5 +92,23 @@ public class BlogController {
         loveMapper.insert(love);
         return true;
     }
+
+    @GetMapping("/collect")
+    public boolean collect(Collect collect){
+        collect.setCollectid(collectMapper.selectCount(null));
+        collectMapper.insert(collect);
+        return true;
+    }
+
+    @GetMapping("/allCollect")
+    public List<Blog> allCollect(int userid){
+        List<Collect> collects= collectMapper.selectList(new QueryWrapper<Collect>().eq("userid", userid));
+        List<Blog> blogs=new ArrayList<>();
+        for(Collect c:collects){
+            blogs.add(blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",c.getBlogid())));
+        }
+        return blogs;
+    }
+
 
 }
