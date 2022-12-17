@@ -3,7 +3,6 @@ package com.example.webspring.controller;
 import com.example.webspring.entity.Drifter;
 import com.example.webspring.mapper.DrifterMapper;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import java.util.Random;
 public class DrifterController {
     @Autowired //注入
     private DrifterMapper drifterMapper;
-    private static int maxID=1000;
+    private final int maxID=1000;
 
     @ApiOperation("传入ownerid,title,content，返回这个漂流瓶的ID")
     @GetMapping("/writeDrifter")
@@ -28,12 +27,11 @@ public class DrifterController {
         Random random=new Random();
         random.setSeed(10000L);
 
-        int id=random.nextInt(1000);
+        int id=random.nextInt(maxID);
         while(drifterMapper.isDrifterExisted(id)) {
-            id = random.nextInt(1000);
+            id = random.nextInt(maxID);
         }
         drifter.setId(id);
-        if(id>maxID) maxID=id;
 
         Timestamp time=new Timestamp(System.currentTimeMillis());
         SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -55,18 +53,18 @@ public class DrifterController {
         return drifterMapper.selectMyDrifter(pickerid);
     }
 
-    @ApiOperation("随机捡一个漂流瓶,如果捞了30次还没捞到，返回null")
+    @ApiOperation("随机捡一个漂流瓶,如果捞了1000次还没捞到，返回null")
     @GetMapping("/getDrifter")
     @CrossOrigin
     public Drifter getDrifter(int pickerid){
         int count=0;
         Random random=new Random();
         random.setSeed(10000L);
-        int id=random.nextInt(maxID+1);
+        int id=random.nextInt(maxID);
         Drifter drifter;
         while(!(drifterMapper.isDrifterExisted(id)&&!drifterMapper.isPicked(id))) {
             if(count>=1000) return null;
-            id = random.nextInt(maxID+1);
+            id = random.nextInt(maxID);
             count++;
         }
         drifter= drifterMapper.selectDrifter(id).get(0);
