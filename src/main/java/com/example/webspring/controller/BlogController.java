@@ -2,10 +2,7 @@ package com.example.webspring.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.webspring.entity.*;
-import com.example.webspring.mapper.BlogMapper;
-import com.example.webspring.mapper.CollectMapper;
-import com.example.webspring.mapper.CommentMapper;
-import com.example.webspring.mapper.LoveMapper;
+import com.example.webspring.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +20,11 @@ public class BlogController {
     private CommentMapper commentMapper;
     @Autowired
     private LoveMapper loveMapper;
-
     @Autowired
     private CollectMapper collectMapper;
+
+    @Autowired
+    private IndexMapper indexMapper;
 
     @GetMapping("/allBlog")
     public List<Blog> getBlogs(int n){
@@ -57,6 +56,8 @@ public class BlogController {
     @GetMapping("/writeBlog")
     public int writeBlog(Blog blog){
         blog.setBlogid(blogMapper.selectCount(null));
+        blog.setUsername(indexMapper.selectOne(new QueryWrapper<User>().
+                eq("id",blog.getUserid())).getName());
         blogMapper.insert(blog);
         return blog.getBlogid();
     }
