@@ -34,7 +34,7 @@ public class BlogController {
     @GetMapping("/myBlog")
     public List<Blog> getMyBlog(int userid,int n){
         List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userid));
-        return myBlogs.subList(0,n);
+        return myBlogs.size()>n?myBlogs.subList(0,n):myBlogs;
     }
 
     @GetMapping("/getOneBlog")
