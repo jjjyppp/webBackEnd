@@ -111,5 +111,34 @@ public class BlogController {
         return blogs;
     }
 
+    @GetMapping("/getBlogNumber")
+    public int getBlogNumber(int userid){
+        return blogMapper.selectCount(new QueryWrapper<Blog>().eq("userid",userid));
+    }
 
+    @GetMapping("/getLikes")
+    public int getLikes(int userid){
+        int res=0;
+        List<Love> loves=loveMapper.selectList(null);
+        for(Love l:loves){
+            Blog b=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",l.getBlogid()));
+            if(b.getUserid()==userid){
+                res++;
+            }
+        }
+        return res;
+    }
+
+    @GetMapping("/getCollect")
+    public int getCollect(int userid){
+        int res=0;
+        List<Collect> collects=collectMapper.selectList(null);
+        for(Collect c:collects){
+            Blog b=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",c.getBlogid()));
+            if(b.getUserid()==userid){
+                res++;
+            }
+        }
+        return res;
+    }
 }
