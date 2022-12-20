@@ -19,7 +19,7 @@ public class CapsuleController {
     @Autowired //注入
     private CapsuleMapper capsuleMapper;
 
-    @ApiOperation("传入userid,title,content,openTime，返回这个胶囊的ID")
+    @ApiOperation("传入userid,title,content,opentime，返回这个胶囊的ID")
     @GetMapping("/makeCapsule")
     @CrossOrigin
     public int makeCapsule(Capsule capsule){
