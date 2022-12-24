@@ -125,6 +125,14 @@ public class BlogController {
         }
         return true;
     }
+
+    @GetMapping("/isCollected")
+    public boolean isCollected(int userid,int blogid){
+        QueryWrapper<Collect> wrapper=new QueryWrapper<Collect>();
+        wrapper.eq("userid",userid);
+        wrapper.eq("blogid",blogid);
+        return collectMapper.selectCount(wrapper)!=0;
+    }
     @GetMapping("/collect")
     public boolean collect(Collect collect){
         collect.setCollectid(collectMapper.selectCount(null));
