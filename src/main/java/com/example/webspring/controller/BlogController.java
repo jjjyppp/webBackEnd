@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,8 @@ public class BlogController {
     @GetMapping("/writeComment")
     public boolean writeComment(Comment comment){
         comment.setCommentid(commentMapper.selectCount(null));
+        comment.setUsername(indexMapper.selectOne(new QueryWrapper<User>().
+                eq("id",comment.getUserid())).getName());
         commentMapper.insert(comment);
         return true;
     }
