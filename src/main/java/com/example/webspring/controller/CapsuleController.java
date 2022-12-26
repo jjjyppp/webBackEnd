@@ -52,7 +52,7 @@ public class CapsuleController {
     public Capsule openCapsule(int capsuleid){
         Capsule capsule=capsuleMapper.selectCapsule(capsuleid).get(0);
         Date nowDate=new Date(System.currentTimeMillis());
-        if(!nowDate.before(capsule.getOpentime())){
+        if(!nowDate.before(capsuleMapper.getOpentime(capsuleid))){
             capsule.setIsopened(true);
             capsuleMapper.openedUpdate(capsuleid);
             return capsule;
