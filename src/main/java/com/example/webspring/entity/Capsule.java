@@ -1,5 +1,6 @@
 package com.example.webspring.entity;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Capsule {
@@ -7,8 +8,8 @@ public class Capsule {
     private int userid;
     private String title;
     private String content;
-    private Timestamp writetime;
-    private Timestamp opentime;
+    private Date writetime;
+    private Date opentime;
     private boolean isopened;
 
     public int getCapsuleid() {
@@ -43,19 +44,19 @@ public class Capsule {
         this.content = content;
     }
 
-    public Timestamp getWritetime() {
+    public Date getWritetime() {
         return writetime;
     }
 
-    public void setWritetime(Timestamp writetime) {
+    public void setWritetime(Date writetime) {
         this.writetime = writetime;
     }
 
-    public Timestamp getOpentime() {
+    public Date getOpentime() {
         return opentime;
     }
 
-    public void setOpentime(Timestamp opentime) {
+    public void setOpentime(Date opentime) {
         this.opentime = opentime;
     }
 

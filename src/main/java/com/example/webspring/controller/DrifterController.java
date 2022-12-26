@@ -33,12 +33,6 @@ public class DrifterController {
         }
         drifter.setId(id);
 
-        Timestamp time=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timeStr = df.format(time);
-        time=Timestamp.valueOf(timeStr);
-        drifter.setTime(time);
-
         drifter.setPickerid(-1);
         drifter.setIspicked(false);
         drifterMapper.insert(drifter);
