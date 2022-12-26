@@ -50,6 +50,10 @@ public class IndexController {
 
     @GetMapping("/changeInfo")
     public boolean changeInfo(String name,String passwd,int userid){
+        if(indexMapper.isNameExisted(name)){
+            int id=indexMapper.selectIdFromName(name);
+            if(id!=userid) return false;
+        }
         User user=indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid));
         user.setName(name);
         user.setPassword(passwd);

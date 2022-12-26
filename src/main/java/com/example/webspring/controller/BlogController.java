@@ -45,6 +45,10 @@ public class BlogController {
     @GetMapping("/deleteBlog")
     public boolean deleteBlog(int blogid){
         blogMapper.delete(new QueryWrapper<Blog>().eq("blogid",blogid));
+        commentMapper.delete(new QueryWrapper<Comment>().eq("blogid",blogid));
+        loveMapper.delete(new QueryWrapper<Love>().eq("blogid",blogid));
+        collectMapper.delete(new QueryWrapper<Collect>().eq("blogid",blogid));
+
         for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
             Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
             new_blog.setBlogid(i-1);
