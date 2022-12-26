@@ -22,8 +22,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("shit")
-                .description("holyshit")
+                .title("Interface Specification")
+                .description("rt")
                 .version("1.0")
                 .build();
     }

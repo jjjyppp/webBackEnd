@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +71,8 @@ public class BlogController {
     @GetMapping("/writeComment")
     public boolean writeComment(Comment comment){
         comment.setCommentid(commentMapper.selectCount(null));
+        comment.setUsername(indexMapper.selectOne(new QueryWrapper<User>().
+                eq("id",comment.getUserid())).getName());
         commentMapper.insert(comment);
         return true;
     }
@@ -98,6 +102,45 @@ public class BlogController {
         return true;
     }
 
+    @GetMapping("/dislike")
+    public boolean dislike(int blogid,int userid){
+        QueryWrapper<Love> wrapper=new QueryWrapper<Love>();
+        wrapper.eq("blogid",blogid);
+        wrapper.eq("userid",userid);
+        Love l=loveMapper.selectOne(wrapper);
+        int l_id=l.getLoveid();
+        loveMapper.delete(new QueryWrapper<Love>().eq("loveid",l_id));
+        for(int i=l_id+1;i<loveMapper.selectCount(null)+1;i++){
+            Love tmp=loveMapper.selectOne(new QueryWrapper<Love>().eq("loveid",i));
+            tmp.setLoveid(i-1);
+            loveMapper.update(tmp,new QueryWrapper<Love>().eq("loveid",i));
+        }
+        return true;
+    }
+
+    @GetMapping("/cancelCollect")
+    public boolean cancelCollect(int blogid,int userid){
+        QueryWrapper<Collect> wrapper=new QueryWrapper<Collect>();
+        wrapper.eq("blogid",blogid);
+        wrapper.eq("userid",userid);
+        Collect c=collectMapper.selectOne(wrapper);
+        int c_id=c.getCollectid();
+        collectMapper.delete(new QueryWrapper<Collect>().eq("collectid",c_id));
+        for(int i=c_id+1;i<collectMapper.selectCount(null)+1;i++){
+            Collect tmp=collectMapper.selectOne(new QueryWrapper<Collect>().eq("collectid",i));
+            tmp.setCollectid(i-1);
+            collectMapper.update(tmp,new QueryWrapper<Collect>().eq("collectid",i));
+        }
+        return true;
+    }
+
+    @GetMapping("/isCollected")
+    public boolean isCollected(int userid,int blogid){
+        QueryWrapper<Collect> wrapper=new QueryWrapper<Collect>();
+        wrapper.eq("userid",userid);
+        wrapper.eq("blogid",blogid);
+        return collectMapper.selectCount(wrapper)!=0;
+    }
     @GetMapping("/collect")
     public boolean collect(Collect collect){
         collect.setCollectid(collectMapper.selectCount(null));

@@ -48,6 +48,10 @@ public class IndexController {
         return indexMapper.selectOne(new QueryWrapper<User>().eq("id",userid)).getName();
     }
 
+    @GetMapping("/getUserId")
+    public int getUserId(String username){
+        return indexMapper.selectOne(new QueryWrapper<User>().eq("name",username)).getId();
+    }
     @GetMapping("/changeInfo")
     public boolean changeInfo(String name,String passwd,int userid){
         if(indexMapper.isNameExisted(name)){
