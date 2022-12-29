@@ -30,12 +30,12 @@ public class BlogController {
 
     @GetMapping("/allBlog")
     public List<Blog> getBlogs(int n){
-        return blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n));
+        return blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n).orderByDesc("blogid"));
     }
 
     @GetMapping("/myBlog")
     public List<Blog> getMyBlog(int userid,int n){
-        List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userid));
+        List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userid).orderByDesc("blogid"));
         return myBlogs.size()>n?myBlogs.subList(0,n):myBlogs;
     }
 
@@ -79,12 +79,23 @@ public class BlogController {
 
     @GetMapping("/getComment")
     public List<Comment> getBlogComment(int blogid){
-        return commentMapper.selectList(new QueryWrapper<Comment>().eq("blogid",blogid));
+        return commentMapper.selectList(new QueryWrapper<Comment>().eq("blogid",blogid).orderByDesc("blogid"));
     }
 
     @GetMapping("/likeNum")
     public int loveNum(int blogid){
         return loveMapper.selectCount(new QueryWrapper<Love>().eq("blogid",blogid));
+    }
+
+    @GetMapping("/trending")
+    public List<Blog> getTrendingBlog(int n){
+        List<Blog> blogs=blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n).orderByDesc("blogid"));
+        List<Blog> trends=new ArrayList<Blog>();
+        for (Blog blog : blogs) {
+            if (loveNum(blog.getBlogid()) > 10) trends.add(blog);
+        }
+
+        return trends;
     }
 
     @GetMapping("/haveLiked")
