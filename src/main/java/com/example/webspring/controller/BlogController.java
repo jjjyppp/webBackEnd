@@ -30,12 +30,12 @@ public class BlogController {
 
     @GetMapping("/allBlog")
     public List<Blog> getBlogs(int n){
-        return blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n));
+        return blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n).orderByDesc("blogid"));
     }
 
     @GetMapping("/myBlog")
     public List<Blog> getMyBlog(int userid,int n){
-        List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userid));
+        List<Blog> myBlogs=blogMapper.selectList(new QueryWrapper<Blog>().eq("userid",userid).orderByDesc("blogid"));
         return myBlogs.size()>n?myBlogs.subList(0,n):myBlogs;
     }
 
@@ -47,17 +47,21 @@ public class BlogController {
     @GetMapping("/deleteBlog")
     public boolean deleteBlog(int blogid){
         blogMapper.delete(new QueryWrapper<Blog>().eq("blogid",blogid));
-//        for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
-//            Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
-//            new_blog.setBlogid(i-1);
-//            blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
-//        }
+        commentMapper.delete(new QueryWrapper<Comment>().eq("blogid",blogid));
+        loveMapper.delete(new QueryWrapper<Love>().eq("blogid",blogid));
+        collectMapper.delete(new QueryWrapper<Collect>().eq("blogid",blogid));
+
+        for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
+            Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
+            new_blog.setBlogid(i-1);
+            blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
+        }
         return true;
     }
 
     @GetMapping("/writeBlog")
     public int writeBlog(Blog blog){
-        blog.setBlogid(blogMapper.maxID()+1);
+        blog.setBlogid(blogMapper.selectCount(null));
         blog.setUsername(indexMapper.selectOne(new QueryWrapper<User>().
                 eq("id",blog.getUserid())).getName());
         blogMapper.insert(blog);
@@ -75,12 +79,23 @@ public class BlogController {
 
     @GetMapping("/getComment")
     public List<Comment> getBlogComment(int blogid){
-        return commentMapper.selectList(new QueryWrapper<Comment>().eq("blogid",blogid));
+        return commentMapper.selectList(new QueryWrapper<Comment>().eq("blogid",blogid).orderByDesc("blogid"));
     }
 
     @GetMapping("/likeNum")
     public int loveNum(int blogid){
         return loveMapper.selectCount(new QueryWrapper<Love>().eq("blogid",blogid));
+    }
+
+    @GetMapping("/trending")
+    public List<Blog> getTrendingBlog(int n){
+        List<Blog> blogs=blogMapper.selectList(new QueryWrapper<Blog>().lt("blogid",n).orderByDesc("blogid"));
+        List<Blog> trends=new ArrayList<Blog>();
+        for (Blog blog : blogs) {
+            if (loveNum(blog.getBlogid()) > 10) trends.add(blog);
+        }
+
+        return trends;
     }
 
     @GetMapping("/haveLiked")

@@ -1,11 +1,12 @@
 package com.example.webspring.entity;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Drifter {
     private int id;
     private int ownerid;
-    private Timestamp time;
+    private Date time;
     private String title;
     private String content;
     private int pickerid;
@@ -41,11 +42,11 @@ public class Drifter {
         return pickerid;
     }
 
-    public void setTime(Timestamp timestamp){
+    public void setTime(Date timestamp){
         this.time=timestamp;
     }
 
-    public Timestamp getTime(){
+    public Date getTime(){
         return time;
     }
 

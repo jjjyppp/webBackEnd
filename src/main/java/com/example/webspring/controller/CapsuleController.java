@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,7 +20,7 @@ public class CapsuleController {
     @Autowired //注入
     private CapsuleMapper capsuleMapper;
 
-    @ApiOperation("传入userid,title,content,opentime，返回这个胶囊的ID")
+    @ApiOperation("传入userid,title,content,opentime，time返回这个胶囊的ID")
     @GetMapping("/makeCapsule")
     @CrossOrigin
     public int makeCapsule(Capsule capsule){
@@ -32,13 +33,6 @@ public class CapsuleController {
             id = random.nextInt(maxID);
         }
         capsule.setCapsuleid(id);
-
-        Timestamp time=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timeStr = df.format(time);
-        time=Timestamp.valueOf(timeStr);
-        capsule.setWritetime(time);
-
         capsule.setIsopened(false);
         capsuleMapper.insert(capsule);
 
@@ -57,13 +51,8 @@ public class CapsuleController {
     @CrossOrigin
     public Capsule openCapsule(int capsuleid){
         Capsule capsule=capsuleMapper.selectCapsule(capsuleid).get(0);
-
-        Timestamp nowTime=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String timeStr = df.format(nowTime);
-        nowTime=Timestamp.valueOf(timeStr);
-
-        if(nowTime.after(capsule.getOpentime())){
+        Date nowDate=new Date(System.currentTimeMillis());
+        if(!nowDate.before(capsuleMapper.getOpentime(capsuleid))){
             capsule.setIsopened(true);
             capsuleMapper.openedUpdate(capsuleid);
             return capsule;
