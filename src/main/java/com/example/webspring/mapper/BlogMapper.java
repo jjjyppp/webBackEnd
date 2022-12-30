@@ -9,4 +9,6 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 @Mapper
 public interface BlogMapper extends BaseMapper<Blog> {
+    @Select("select max(blogid) blogid from blog")
+    public int maxID();
 }
