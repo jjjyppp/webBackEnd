@@ -50,18 +50,18 @@ public class BlogController {
         commentMapper.delete(new QueryWrapper<Comment>().eq("blogid",blogid));
         loveMapper.delete(new QueryWrapper<Love>().eq("blogid",blogid));
         collectMapper.delete(new QueryWrapper<Collect>().eq("blogid",blogid));
-
-        for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
-            Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
-            new_blog.setBlogid(i-1);
-            blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
-        }
+//
+//        for(int i=blogid+1;i<blogMapper.selectCount(null)+1;i++){
+//            Blog new_blog=blogMapper.selectOne(new QueryWrapper<Blog>().eq("blogid",i));
+//            new_blog.setBlogid(i-1);
+//            blogMapper.update(new_blog,new QueryWrapper<Blog>().eq("blogid",i));
+//        }
         return true;
     }
 
     @GetMapping("/writeBlog")
     public int writeBlog(Blog blog){
-        blog.setBlogid(blogMapper.selectCount(null));
+        blog.setBlogid(blogMapper.maxID()+1);
         blog.setUsername(indexMapper.selectOne(new QueryWrapper<User>().
                 eq("id",blog.getUserid())).getName());
         blogMapper.insert(blog);
